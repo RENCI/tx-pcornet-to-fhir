@@ -1,15 +1,16 @@
 import pandas as pd
 import os
 import json
-import datetime
 
 
 def bundle(entry=[]):
-    return {
+    fhir_bundle = {
         "resourceType": "Bundle",
-        "type": "collection",
-        "entry": entry
+        "type": "collection"
     }
+    if entry:
+        fhir_bundle["entry"] = entry
+    return fhir_bundle
 
 
 def patient_conversion(input_file, map_df, output_path, partition):
@@ -23,8 +24,6 @@ def patient_conversion(input_file, map_df, output_path, partition):
             "resource": {
                 "resourceType": "Patient",
                 "id": row['PATID'],
-                "extension": [
-                ],
                 "gender": map_df.loc['SEX', row['SEX']].at['fhir_out_cd'],
                 "birthDate": row['BIRTH_DATE'],
                 "maritalStatus": {
@@ -36,15 +35,19 @@ def patient_conversion(input_file, map_df, output_path, partition):
                 }
             }
         }
-        mapped_race = map_df.loc['SEX', row['RACE']].at['fhir_out_cd']
-        if mapped_race:
+        mapped_race = map_df.loc['RACE', row['RACE']].at['fhir_out_cd']
+        if not pd.isnull(mapped_race):
+            if 'extension' not in entry['resource']:
+                entry['resource']['extension'] = []
             entry['resource']['extension'].append(
                 {
                     "url": "http://terminology.hl7.org/ValueSet/v3-Race",
                     "valueString": mapped_race
                 })
-        mapped_ethnic = map_df.loc['SEX', row['HISPANIC']].at['fhir_out_cd']
-        if mapped_ethnic:
+        mapped_ethnic = map_df.loc['HISPANIC', row['HISPANIC']].at['fhir_out_cd']
+        if not pd.isnull(mapped_ethnic):
+            if 'extension' not in entry['resource']:
+                entry['resource']['extension'] = []
             entry['resource']['extension'].append(
                 {
                     "url": "http://hl7.org/fhir/v3/Ethnicity",

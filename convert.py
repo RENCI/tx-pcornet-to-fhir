@@ -1,5 +1,14 @@
 import sys
-from utils import mapping_pcornet_to_fhir
+import pandas as pd
+
+from utils import patient_conversion, medicationrequest_conversion
+
+
+def mapping_pcornet_to_fhir(input_path, output_path, partition):
+    mapping_file = 'mapping/pcornet_to_fhir.csv'
+    map_df = pd.read_csv(mapping_file, index_col=['table_cd', 'column_cd', 'local_in_cd'])
+    patient_conversion(input_path, map_df, output_path, partition)
+    medicationrequest_conversion(input_path, map_df, output_path, partition)
 
 
 if __name__ == '__main__':

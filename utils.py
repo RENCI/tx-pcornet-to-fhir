@@ -165,10 +165,3 @@ def medicationrequest_conversion(input_path, map_df, output_path, partition):
         write_fhir_json(bundle(entry=prescribe_fhir_entries), os.path.join(mr_dir, file_name))
         i = i + partition
     return
-
-
-def mapping_pcornet_to_fhir(input_path, output_path, partition):
-    mapping_file = 'mapping/pcornet_to_fhir.csv'
-    map_df = pd.read_csv(mapping_file, index_col=['table_cd', 'column_cd', 'local_in_cd'])
-    patient_conversion(input_path, map_df, output_path, partition)
-    medicationrequest_conversion(input_path, map_df, output_path, partition)

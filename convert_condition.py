@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import json
 
 from utils import bundle, write_fhir_json, get_input_df
 

@@ -1,7 +1,8 @@
 import sys
 import pandas as pd
 
-from utils import patient_conversion, medicationrequest_conversion, encounter_conversion, condition_conversion
+from utils import patient_conversion, medicationrequest_conversion, encounter_conversion, condition_conversion, \
+    lab_conversion
 
 
 def mapping_pcornet_to_fhir(input_path, output_path, partition):
@@ -11,6 +12,7 @@ def mapping_pcornet_to_fhir(input_path, output_path, partition):
     medicationrequest_conversion(input_path, map_df, output_path, partition)
     encounter_conversion(input_path, map_df, output_path, partition)
     condition_conversion(input_path, map_df, output_path, partition)
+    lab_conversion(input_path, map_df, output_path, partition)
 
 
 if __name__ == '__main__':

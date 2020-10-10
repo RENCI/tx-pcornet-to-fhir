@@ -66,17 +66,17 @@ ENCOUNTER,ADMITTING_SOURCE,IH,oth,Other,imperfect match,ENC_HOSP_ADMSRC_CODING_C
 ENCOUNTER,ADMITTING_SOURCE,NI,,,No mapping for unknown,ENC_HOSP_ADMSRC_CODING_CODE,https://www.hl7.org/fhir/valueset-encounter-admit-source.html
 ENCOUNTER,ADMITTING_SOURCE,UN,,,No mapping for unknown,ENC_HOSP_ADMSRC_CODING_CODE,https://www.hl7.org/fhir/valueset-encounter-admit-source.html
 ENCOUNTER,ADMITTING_SOURCE,OT,oth,Other,,ENC_HOSP_ADMSRC_CODING_CODE,https://www.hl7.org/fhir/valueset-encounter-admit-source.html
-VITALS,SMOKING,01,449868002,Current every day smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,02,428041000124106,Current some day smoke,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,03,8517006,Former smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,04,266919005,Never smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,05,77176002,"Smoker, current status unknown",,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,06,266927001,Unknown if ever smoked,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,07,428071000124103,Current Heavy tobacco smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,08,428061000124105,Current Light tobacco smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,NI,,,No mapping for null,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,UN,266927001,Unknown if ever smoked,,OBS_CODE_CODING_CODE,http://snomed.info/sct
-VITALS,SMOKING,OT,,,No mapping for other,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,01,449868002,Current every day smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,02,428041000124106,Current some day smoke,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,03,8517006,Former smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,04,266919005,Never smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,05,77176002,"Smoker, current status unknown",,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,06,266927001,Unknown if ever smoked,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,07,428071000124103,Current Heavy tobacco smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,08,428061000124105,Current Light tobacco smoker,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,NI,,,No mapping for null,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,UN,266927001,Unknown if ever smoked,,OBS_CODE_CODING_CODE,http://snomed.info/sct
+VITAL,SMOKING,OT,,,No mapping for other,OBS_CODE_CODING_CODE,http://snomed.info/sct
 LAB_RESULT_CM,RESULT_MODIFIER,EQ,,,,OBS_VALUEQUANTITY_COMPARATOR,
 LAB_RESULT_CM,RESULT_MODIFIER,GE,>=,,,OBS_VALUEQUANTITY_COMPARATOR,
 LAB_RESULT_CM,RESULT_MODIFIER,GT,>,,,OBS_VALUEQUANTITY_COMPARATOR,

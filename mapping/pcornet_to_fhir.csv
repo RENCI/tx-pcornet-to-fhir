@@ -125,3 +125,5 @@ PROVIDER,PROVIDER_SEX,F,female,,,PRACT_GENDER,https://www.hl7.org/fhir/valueset-
 PROVIDER,PROVIDER_SEX,M,male,,,PRACT_GENDER,https://www.hl7.org/fhir/valueset-administrative-gender.html
 PROVIDER,PROVIDER_SEX,NI,unknown,,,PRACT_GENDER,https://www.hl7.org/fhir/valueset-administrative-gender.html
 PROVIDER,PROVIDER_SEX,UN,unknown,,,PRACT_GENDER,https://www.hl7.org/fhir/valueset-administrative-gender.html
+OBS_CLIN,OBSCLIN_TYPE,LC,http://loinc.org/,,,Observation/code/coding/system,https://www.hl7.org/fhir/datatypes.html#CodeableConcept
+OBS_CLIN,OBSCLIN_TYPE,SM,http://snomed.info/sct,,,Observation/code/coding/system,https://www.hl7.org/fhir/datatypes.html#CodeableConcept

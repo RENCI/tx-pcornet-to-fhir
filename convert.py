@@ -9,6 +9,7 @@ from convert_lab import lab_conversion
 from convert_vital import vital_conversion
 from convert_procedure import procedure_conversion
 from convert_practitioner import practitioner_conversion
+from convert_observation import obs_conversion
 
 
 def mapping_pcornet_to_fhir(input_path, output_path, partition):
@@ -22,6 +23,7 @@ def mapping_pcornet_to_fhir(input_path, output_path, partition):
     vital_conversion(input_path, map_df, output_path, partition)
     procedure_conversion(input_path, output_path, partition)
     practitioner_conversion(input_path, map_df, output_path, partition)
+    obs_conversion(input_path, map_df, output_path, partition)
 
 
 if __name__ == '__main__':

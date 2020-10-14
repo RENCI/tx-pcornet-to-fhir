@@ -6,8 +6,32 @@ from utils import bundle, write_fhir_json, get_input_df
 
 def patient_conversion(input_path, map_df, output_path, partition):
     pat_df, subset_map_df = get_input_df("DEMOGRAPHIC", input_path, map_df)
+    address_df = pd.read_csv(os.path.join(input_path, "LDS_ADDRESS_HISTORY.csv"), sep='|', index_col=['PATID'],
+                             usecols=['ADDRESSID', 'PATID', 'ADDRESS_USE', 'ADDRESS_CITY', 'ADDRESS_STATE',
+                                      'ADDRESS_TYPE', 'ADDRESS_ZIP5', 'ADDRESS_ZIP9', 'ADDRESS_PERIOD_START',
+                                      'ADDRESS_PERIOD_END'])
+    addr_subset_map_df = map_df.loc["LDS_ADDRESS_HISTORY", :]
 
     def map_one_patient(row):
+        pat_address_list = []
+
+        def map_one_address(addr_row):
+            addr_dict = {
+                "use": addr_subset_map_df.loc['ADDRESS_USE', addr_row['ADDRESS_USE']].at['fhir_out_cd'],
+                "type": addr_subset_map_df.loc['ADDRESS_TYPE', addr_row['ADDRESS_TYPE']].at['fhir_out_cd'],
+                "city": addr_row['ADDRESS_CITY'],
+                "postalCode": addr_row['ADDRESS_ZIP9'],
+                "period": {
+                    "start": addr_row['ADDRESS_PERIOD_START']
+                }
+            }
+            if not pd.isnull(addr_row['ADDRESS_STATE']):
+                addr_dict["state"] = addr_row['ADDRESS_STATE']
+            if not pd.isnull(addr_row['ADDRESS_PERIOD_END']):
+                addr_dict['period']["end"] = addr_row['ADDRESS_PERIOD_END']
+            pat_address_list.append(addr_dict)
+            return
+
         entry = {
             "fullUrl": "https://www.hl7.org/fhir/patient.html",
             "resource": {
@@ -42,6 +66,14 @@ def patient_conversion(input_path, map_df, output_path, partition):
                     "url": "http://hl7.org/fhir/v3/Ethnicity",
                     "valueString": mapped_ethnic
                 })
+
+        if row['PATID'] in address_df.index:
+            part_addr_df = address_df.loc[row['PATID']]
+            if isinstance(part_addr_df, pd.DataFrame):
+                part_addr_df.apply(lambda addr_row: map_one_address(addr_row), axis=1)
+            else: # it is of type Series
+                map_one_address(part_addr_df)
+            entry['resource']['address'] = pat_address_list
         pat_fhir_entries.append(entry)
         return
 

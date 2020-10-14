@@ -32,10 +32,6 @@ if __name__ == '__main__':
         input_path = args[0]
         output_path = args[1]
         partition = args[2]
-        table_cd_file_list = []
-        # for dir_name, _, file_list in os.walk(input_path):
-        #     for file_name in file_list:
-        #         table_cd_file_list.append(file_name)
         mapping_pcornet_to_fhir(input_path, output_path, partition)
         sys.exit(0)
     else:

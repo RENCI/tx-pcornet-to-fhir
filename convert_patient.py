@@ -12,6 +12,10 @@ def patient_conversion(input_path, map_df, output_path, partition):
                                       'ADDRESS_PERIOD_END'])
     addr_subset_map_df = map_df.loc["LDS_ADDRESS_HISTORY", :]
 
+    # read DEATH to add to patient resource as needed
+    death_df = pd.read_csv(os.path.join(input_path, "DEATH.csv"), sep='|', index_col=['PATID'],
+                           usecols=['PATID', 'DEATH_SOURCE', 'DEATH_DATE'])
+
     def map_one_patient(row):
         pat_address_list = []
 
@@ -74,6 +78,13 @@ def patient_conversion(input_path, map_df, output_path, partition):
             else: # it is of type Series
                 map_one_address(part_addr_df)
             entry['resource']['address'] = pat_address_list
+
+        if row['PATID'] in death_df.index:
+            if not pd.isnull(death_df.loc[row['PATID']].at['DEATH_DATE']):
+                entry['resource']['deceasedDateTime'] = death_df.loc[row['PATID']].at['DEATH_DATE']
+            else:
+                entry['resource']['deceasedBoolean'] = True
+
         pat_fhir_entries.append(entry)
         return
 

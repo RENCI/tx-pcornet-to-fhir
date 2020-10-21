@@ -1,15 +1,15 @@
 import sys
 import pandas as pd
 
-from convert_patient import patient_conversion
-from convert_medication_request import medicationrequest_conversion
-from convert_encounter import encounter_conversion
-from convert_condition import condition_conversion
-from convert_lab import lab_conversion
-from convert_vital import vital_conversion
-from convert_procedure import procedure_conversion
-from convert_practitioner import practitioner_conversion
-from convert_observation import obs_conversion
+from .convert_patient import patient_conversion
+from .convert_medication_request import medicationrequest_conversion
+from .convert_encounter import encounter_conversion
+from .convert_condition import condition_conversion
+from .convert_lab import lab_conversion
+from .convert_vital import vital_conversion
+from .convert_procedure import procedure_conversion
+from .convert_practitioner import practitioner_conversion
+from .convert_observation import obs_conversion
 
 
 def mapping_pcornet_to_fhir(input_path, output_path, partition):

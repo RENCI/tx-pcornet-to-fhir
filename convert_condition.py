@@ -5,6 +5,10 @@ from utils import bundle, write_fhir_json, get_input_df
 
 
 def condition_conversion(input_path, map_df, output_path, partition):
+    # read DEATH_CAUSE to add to condition resource as needed
+    dc_df = pd.read_csv(os.path.join(input_path, "DEATH_CAUSE.csv"), sep='|', index_col=['PATID'],
+                        usecols=['PATID', 'DEATH_CAUSE', 'DEATH_CAUSE_CODE'])
+
     def map_one_condition(row):
         entry = {
             "fullUrl": "https://www.hl7.org/fhir/condition.html",
@@ -30,14 +34,39 @@ def condition_conversion(input_path, map_df, output_path, partition):
             cat_dict['coding'] = [code_dict]
             entry['resource']['category'] = [cat_dict]
 
-        if not pd.isnull(row['CON_CODE_CODING_SYST']) or not pd.isnull(row['CON_CODE_CODING_CODE']):
+        if not pd.isnull(row['CON_CODE_CODING_SYST']) or not pd.isnull(row['CON_CODE_CODING_CODE']) or \
+                row['PATID'] in dc_df.index:
             coding_dict = {}
-            code_dict = {}
+            code_dict = {'coding': []}
             if not pd.isnull(row['CON_CODE_CODING_SYST']):
                 coding_dict['system'] = row['CON_CODE_CODING_SYST']
             if not pd.isnull(row['CON_CODE_CODING_CODE']):
                 coding_dict['code'] = row['CON_CODE_CODING_CODE']
-            code_dict['coding'] = [coding_dict]
+            code_dict['coding'].append(coding_dict)
+            if row['CON_SUBJECT_REFERENCE'] in dc_df.index:
+                dc_codes = dc_df.loc[row['CON_SUBJECT_REFERENCE']]
+
+                def map_one_dc_code(dc_row):
+                    if str(dc_row['DEATH_CAUSE_CODE']) == '09':
+                        code_system = 'http://hl7.org/fhir/sid/icd-9-cm'
+                    elif str(dc_row['DEATH_CAUSE_CODE']) == '10':
+                        code_system = 'http://hl7.org/fhir/sid/icd-10-cm'
+                    else:
+                        code_system = None
+
+                    if code_system:
+                        dc_code_dict = {
+                            'system': code_system,
+                            'code': dc_row['DEATH_CAUSE']
+                        }
+                        code_dict['coding'].append(dc_code_dict)
+                    return
+
+                if isinstance(dc_codes, pd.DataFrame):
+                    dc_codes.apply(lambda dc_row: map_one_dc_code(dc_row), axis=1)
+                else:  # it is of type Series
+                    map_one_dc_code(dc_codes)
+
             entry['resource']['code'] = code_dict
 
         if not pd.isnull(row['CON_ASSERTER_REFERENCE']):

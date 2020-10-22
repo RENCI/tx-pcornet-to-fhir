@@ -13,6 +13,11 @@ from convert_observation import obs_conversion
 
 
 def mapping_pcornet_to_fhir(input_path, output_path, partition):
+    # the mapping_file directory is set up as a relative path to where the convert.py is located assuming running
+    # the convert.py as a standalone app. If this method is called in another directory, make sure to change the
+    # mapping_file path accordingly in order to load the mapping file successfully. For example, if this method is
+    # called by a module running in an upper directory, it can be set as:
+    # mapping_file = 'tx-pcornet-to-fhir/mapping/pcornet_to_fhir.csv'
     mapping_file = 'mapping/pcornet_to_fhir.csv'
     map_df = pd.read_csv(mapping_file, index_col=['table_cd', 'column_cd', 'local_in_cd'])
     patient_conversion(input_path, map_df, output_path, partition)

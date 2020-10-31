@@ -1,7 +1,6 @@
-import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
 
 
 def practitioner_conversion(input_path, map_df, output_path, partition):
@@ -24,12 +23,10 @@ def practitioner_conversion(input_path, map_df, output_path, partition):
     partition = int(partition)
     input_df_len = len(input_df)
     input_dir = os.path.join(output_path, 'Practitioner')
-
+    write_fhir_0_json(input_dir)
     while i < input_df_len:
         input_fhir_entries = []
-        file_name = f'{i}.json'
-        write_fhir_json(bundle(), input_dir, file_name)
-        part_input_df = input_df.loc[i:i+partition, :]
+        part_input_df = input_df.iloc[i:i+partition, :]
         part_input_df.apply(lambda row: map_one_row(row), axis=1)
         part_input_df_len = len(part_input_df)
         file_name = f'{part_input_df_len}.json'

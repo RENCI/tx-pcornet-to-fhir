@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
 
 
 def lab_conversion(input_path, map_df, output_path, partition):
@@ -73,12 +73,10 @@ def lab_conversion(input_path, map_df, output_path, partition):
     partition = int(partition)
     pat_df_len = len(input_df)
     pat_dir = os.path.join(output_path, 'Lab')
-
+    write_fhir_0_json(pat_dir)
     while i < pat_df_len:
         lab_fhir_entries = []
-        file_name = f'{i}.json'
-        write_fhir_json(bundle(), pat_dir, file_name)
-        part_pat_df = input_df.loc[i:i+partition, :]
+        part_pat_df = input_df.iloc[i:i+partition, :]
         part_pat_df.apply(lambda row: map_one_lab(row), axis=1)
         part_pat_df_len = len(part_pat_df)
         file_name = f'{part_pat_df_len}.json'

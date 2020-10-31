@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
 
 
 def condition_conversion(input_path, map_df, output_path, partition):
@@ -150,19 +150,11 @@ def condition_conversion(input_path, map_df, output_path, partition):
     join_df_len = len(join_df)
 
     cond_dir = os.path.join(output_path, 'Condition')
+    write_fhir_0_json(cond_dir)
 
     while i < join_df_len:
         cond_fhir_entries = []
-        file_name = f'{i}.json'
-        write_fhir_json(bundle(), cond_dir, file_name)
-        if i + partition >= join_df_len:
-            if i == 0:
-                part_pat_df = join_df
-            else:
-                part_pat_df = join_df.loc[i:i + join_df_len, :]
-        else:
-            part_pat_df = join_df.loc[i:i + partition, :]
-
+        part_pat_df = join_df.iloc[i:i+partition, :]
         part_pat_df.apply(lambda row: map_one_condition(row), axis=1)
         part_pat_df_len = len(part_pat_df)
         file_name = f'{part_pat_df_len}.json'

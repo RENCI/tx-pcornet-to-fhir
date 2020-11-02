@@ -13,6 +13,11 @@ def bundle(entry=None):
     return fhir_bundle
 
 
+def write_fhir_0_json(input_dir):
+    file_name = '0.json'
+    write_fhir_json(bundle(), input_dir, file_name)
+
+
 def write_fhir_json(content, input_path, input_file_name):
     if not os.path.exists(input_path):
         os.makedirs(input_path)

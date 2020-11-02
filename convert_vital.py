@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
 
 
 def vital_conversion(input_path, map_df, output_path, partition):
@@ -132,18 +132,12 @@ def vital_conversion(input_path, map_df, output_path, partition):
     input_df_len = len(input_df)
 
     vital_dir = os.path.join(output_path, 'Vital')
+    write_fhir_0_json(vital_dir)
 
     while i < input_df_len:
         vital_fhir_entries = []
-        file_name = f'{i}.json'
-        write_fhir_json(bundle(), vital_dir, file_name)
-        if i + partition >= input_df_len:
-            if i == 0:
-                part_pat_df = input_df
-            else:
-                part_pat_df = input_df.loc[i:i + input_df_len, :]
-        else:
-            part_pat_df = input_df.loc[i:i + partition, :]
+
+        part_pat_df = input_df.iloc[i:i+partition, :]
 
         part_pat_df.apply(lambda row: map_one_vital(row), axis=1)
         part_pat_df_len = len(part_pat_df)

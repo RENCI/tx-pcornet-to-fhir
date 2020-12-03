@@ -18,13 +18,19 @@ def patient_conversion(input_path, map_df, output_path, partition):
 
     def map_one_patient(row):
         pat_address_list = []
-
+        # map Zip9, when it exists, from "286389277" to "28638-9277" - UNC-specfiic
+        if not pd.isnull(add_row['ADDRESS_ZIP9']):
+            postcode = addr_row['ADDRESS_ZIP9'][:5] + "-" + addr_row['ADDRESS_ZIP9'][5:]
+        elif not pd.isnull(add_row['ADDRESS_ZIP5']):
+            postcode = addr_row['ADDRESS_ZIP5']
+        else:
+            postcode = None 
         def map_one_address(addr_row):
-            addr_dict = {
+                        addr_dict = {
                 "use": addr_subset_map_df.loc['ADDRESS_USE', addr_row['ADDRESS_USE']].at['fhir_out_cd'],
                 "type": addr_subset_map_df.loc['ADDRESS_TYPE', addr_row['ADDRESS_TYPE']].at['fhir_out_cd'],
                 "city": addr_row['ADDRESS_CITY'],
-                "postalCode": addr_row['ADDRESS_ZIP9'],
+                "postalCode": postcode,
                 "period": {
                     "start": addr_row['ADDRESS_PERIOD_START']
                 }

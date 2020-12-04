@@ -14,9 +14,7 @@ from convert_observation import obs_conversion
 
 
 def mapping_pcornet_to_fhir(input_path, output_path, partition):
-    # the mapping_file directory is set up as a relative path to where the convert.py is located assuming running
-    # the convert.py as a standalone app. If this method is called in another directory, make sure to change the
-    # mapping_file path accordingly in order to load the mapping file successfully. For example, if this method is
+    # the mapping_file directory is set up as a relative path to where the convert.py is located
     mapping_file = 'mapping/pcornet_to_fhir.csv'
     if not os.path.isfile(mapping_file):
         # may be called by a module running in an upper directory
@@ -53,5 +51,5 @@ if __name__ == '__main__':
               "output path that will contain converted data in FHIR resource bundles, "
               "and the partition number that is used to split resource bundles into "
               "multiple partitions: \n"
-              "python <input_data_path> <out_data_path> <partition>")
+              "python convert.py <input_data_path> <out_data_path> <partition>")
         sys.exit(1)

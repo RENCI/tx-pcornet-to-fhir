@@ -9,7 +9,7 @@ def patient_conversion(input_path, map_df, output_path, partition):
     address_df = pd.read_csv(os.path.join(input_path, "LDS_ADDRESS_HISTORY.csv"), sep='|', index_col=['PATID'],
                              usecols=['ADDRESSID', 'PATID', 'ADDRESS_USE', 'ADDRESS_CITY', 'ADDRESS_STATE',
                                       'ADDRESS_TYPE', 'ADDRESS_ZIP5', 'ADDRESS_ZIP9', 'ADDRESS_PERIOD_START',
-                                      'ADDRESS_PERIOD_END'])
+                                      'ADDRESS_PERIOD_END'], dtype=str)
     addr_subset_map_df = map_df.loc["LDS_ADDRESS_HISTORY", :]
 
     # read DEATH to add to patient resource as needed
@@ -18,15 +18,17 @@ def patient_conversion(input_path, map_df, output_path, partition):
 
     def map_one_patient(row):
         pat_address_list = []
-        # map Zip9, when it exists, from "286389277" to "28638-9277" - UNC-specfiic
-        if not pd.isnull(add_row['ADDRESS_ZIP9']):
-            postcode = addr_row['ADDRESS_ZIP9'][:5] + "-" + addr_row['ADDRESS_ZIP9'][5:]
-        elif not pd.isnull(add_row['ADDRESS_ZIP5']):
-            postcode = addr_row['ADDRESS_ZIP5']
-        else:
-            postcode = None 
+
         def map_one_address(addr_row):
-                        addr_dict = {
+            # map Zip9, when it exists, from "286389277" to "28638-9277" - UNC-specfiic
+            if not pd.isnull(addr_row['ADDRESS_ZIP9']):
+                addr_str = addr_row['ADDRESS_ZIP9']
+                postcode = '{}-{}'.format(addr_str[:5], addr_str[5:9])
+            elif not pd.isnull(addr_row['ADDRESS_ZIP5']):
+                postcode = addr_row['ADDRESS_ZIP5'][:5]
+            else:
+                postcode = None
+            addr_dict = {
                 "use": addr_subset_map_df.loc['ADDRESS_USE', addr_row['ADDRESS_USE']].at['fhir_out_cd'],
                 "type": addr_subset_map_df.loc['ADDRESS_TYPE', addr_row['ADDRESS_TYPE']].at['fhir_out_cd'],
                 "city": addr_row['ADDRESS_CITY'],

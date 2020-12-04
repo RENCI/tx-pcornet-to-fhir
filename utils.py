@@ -35,3 +35,21 @@ def get_input_df(table_cd, input_path, map_df, use_cols=None):
     else:
         input_df = pd.read_csv(input_file, sep='|')
     return input_df, subset_map_df
+
+
+def get_partition_file_name(partition, df_len, partition_index):
+    """
+    Get partition file name to write json output to.
+    :param partition: the partition number, e.g., 10000
+    :param df_len: dataframe length for the partition. For all partitions of the whole dataframe except for the last
+    partition, it is the same as the partition, but the last partition will be less than or equal to the partition
+    :param partition_index: the looping index for the current partition while partitioning the whole dataframe
+    into partitions
+    :return: the file name for this partition to be written to.
+    """
+    if df_len < partition:
+        file_name = f'{df_len}.json'
+    else:
+        accumulated_len = partition_index + partition
+        file_name = f'{accumulated_len}.json'
+    return file_name

@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json, get_partition_file_name
 
 
 def patient_conversion(input_path, map_df, output_path, partition):
@@ -106,7 +106,7 @@ def patient_conversion(input_path, map_df, output_path, partition):
         part_pat_df = pat_df.iloc[i:i+partition, :]
         part_pat_df.apply(lambda row: map_one_patient(row), axis=1)
         part_pat_df_len = len(part_pat_df)
-        file_name = f'{part_pat_df_len}.json'
+        file_name = get_partition_file_name(partition, part_pat_df_len, i)
         write_fhir_json(bundle(entry=pat_fhir_entries), pat_dir, file_name)
         i = i + partition
     return

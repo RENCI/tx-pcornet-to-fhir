@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json
+from utils import bundle, write_fhir_json, get_input_df, write_fhir_0_json, get_partition_file_name
 
 
 def medicationrequest_conversion(input_path, map_df, output_path, partition):
@@ -76,7 +76,7 @@ def medicationrequest_conversion(input_path, map_df, output_path, partition):
         part_prescribe_df = prescribe_df.iloc[i:i+partition, :]
         part_prescribe_df.apply(lambda row: map_one_medicationrequest(row), axis=1)
         part_prescribe_df_len = len(part_prescribe_df)
-        file_name = f'{part_prescribe_df_len}.json'
+        file_name = get_partition_file_name(partition, part_prescribe_df_len, i)
         write_fhir_json(bundle(entry=prescribe_fhir_entries), mr_dir, file_name)
         i = i + partition
     return
